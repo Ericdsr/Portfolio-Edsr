@@ -1,0 +1,101 @@
+---
+import Social from '@components/ui/Social.astro';
+---
+
+<section id="contact" class="flex flex-col flex-wrap items-center justify-center gap-8 text-black">
+	<hr class="w-1/2" />
+	<div class="flex flex-col gap-8 lg:flex lg:flex-row lg:gap-20">
+		<Social />
+	</div>
+
+	<div class="w-full max-w-lg">
+		<form id="contactForm" class="flex flex-col gap-4">
+			<div>
+				<label for="name" class="block text-sm font-medium text-black dark:text-white">Nom :</label>
+				<input
+					type="text"
+					id="name"
+					name="name"
+					required
+					class="border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:border-gray-600 mt-1 block w-full rounded-md border bg-white text-black shadow-sm sm:text-sm"
+				/>
+			</div>
+
+			<div>
+				<label for="email" class="block text-sm font-medium text-black dark:text-white"
+					>E-mail :</label
+				>
+				<input
+					type="email"
+					id="email"
+					name="email"
+					required
+					class="border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:border-gray-600 mt-1 block w-full rounded-md border bg-white text-black shadow-sm sm:text-sm"
+				/>
+			</div>
+
+			<div>
+				<label for="message" class="block text-sm font-medium text-black dark:text-white"
+					>Message :</label
+				>
+				<textarea
+					id="message"
+					name="message"
+					rows="5"
+					required
+					class="border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:border-gray-600 mt-1 block w-full rounded-md border bg-white text-black shadow-sm sm:text-sm"
+				></textarea>
+			</div>
+
+			<div>
+				<button
+					type="submit"
+					class="bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 w-full rounded-md px-4 py-2 font-bold text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 dark:text-white"
+				>
+					Envoyer
+				</button>
+			</div>
+		</form>
+	</div>
+</section>
+
+<!-- Intégration du script EmailJS via CDN -->
+<script
+	type="text/javascript"
+	src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="text/javascript">
+	(function () {
+		// Initialisation de EmailJS avec ta clé publique
+		emailjs.init({
+			publicKey: '7WfK4Yr8Mx2ZEowD4', // Remplace 'YOUR_PUBLIC_KEY' par ta vraie clé publique
+		});
+	})();
+
+	// Gestion de la soumission du formulaire
+	document.getElementById('contactForm').addEventListener('submit', async function (event) {
+		event.preventDefault();
+
+		const form = event.target;
+		const formData = new FormData(form);
+
+		const templateParams = {
+			from_name: formData.get('name'),
+			from_email: formData.get('email'),
+			message: formData.get('message'),
+		};
+
+		try {
+			// Envoi des données via EmailJS
+			const response = await emailjs.send('service_9n5vpj5', 'template_kr15zub', templateParams);
+			if (response.status === 200) {
+				alert('Message envoyé avec succès !');
+				form.reset();
+			} else {
+				alert("Échec de l'envoi de l'e-mail.");
+			}
+		} catch (error) {
+			console.error('Erreur:', error);
+			alert("Erreur lors de l'envoi de l'e-mail.");
+		}
+	});
+</script>
